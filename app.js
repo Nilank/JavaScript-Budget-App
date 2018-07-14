@@ -1,19 +1,11 @@
+
+//Budget Controller
 var budgetController = (function(){
 
-    var x = 23;
-
-    var add =  fumction(a){
-        return x+a;
-    }
-
-    return {
-        publicTest: function(b){
-            console.log(add(b));
-        }
-    }
 
 })();
 
+//User Interface Controller
 var UIController = (function(){
 
     //We'll write code later
@@ -21,15 +13,27 @@ var UIController = (function(){
 
 })();
 
+//Global App Controller
 var controller = (function(bdgtCntrl, UICtrl){
 
-    var z = budgetController.publicTest(5);
+    var ctrlAddItem  = function(){
 
-    return{
-        anotherPublic: function(){
-            console.log(z);
-        }
+        alert("It Worked!");
+
     }
+
+    document.querySelector('.add__btn').addEventListener('click', ctrlAddItem);
+
+    document.addEventListener('keypress', function(event){
+        if(event.keyCode === 13){
+            ctrlAddItem();
+        }
+    });
+
+
+
+
+
 
 
 })(budgetController, UIController);
