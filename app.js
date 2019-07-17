@@ -23,7 +23,36 @@ var budgetController = (function(){
             exp: 0,
             inc: 0
         }
-    }
+    };
+    return{
+        addItem: function (type, des, val) {
+            var newItem, ID;
+
+            //Create new ID
+            if(data.allItems[type].length > 0){
+                ID = data.allItems[type][data.allItems[type].length - 1].id + 1;
+            }else{
+                ID =0;
+            }
+
+            //Create new item based on 'inc' and 'exp'
+            if(type === 'exp'){
+                newItem = new Expense(ID, des, val);
+            }else if(type === 'inc'){
+                newItem = new Income(ID, des, val);
+            }
+
+            //Push it into the our data structure
+            data.allItems[type].push(newItem);
+
+            //Return the element
+            return newItem;
+        },
+
+        testing: function(){
+            console.log(data);
+        }
+    };
 
 })();
 
@@ -33,7 +62,9 @@ var UIController = (function(){
         inputType: '.add__type',
         inputDescription: '.add__description',
         inputValue: '.add__value',
-        inputButton: '.add__btn'
+        inputButton: '.add__btn',
+        incomeContainer: '.income__list',
+        expensesContainer: '.expenses__list'
     };
 
     return {
@@ -43,6 +74,39 @@ var UIController = (function(){
                 description: document.querySelector(DOMstrings.inputDescription).value,
                 value: document.querySelector(DOMstrings.inputValue).value
             };
+        },
+        addListItem: function(obj, type){
+            var html, newHtml;
+
+            // Create HTML string using placeholder text
+            if(type === 'inc'){
+                html = '<div class="item clearfix" id="income-%id%"><div class="item__description">%description%</div> \n' +
+                    '                <div class="right clearfix"><div class="item__value">%value%</div><div class="item__delete"> \n' +
+                    '                <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button></div></div>\n' +
+                    '            </div>'
+            }else if(type === 'exp'){
+                html ='<div class="item clearfix" id="expense-%id%">\n' +
+                    '                    <div class="item__description">%description%</div>\n' +
+                    '                    <div class="right clearfix">\n' +
+                    '                        <div class="item__value">%value%</div>\n' +
+                    '                        <div class="item__percentage">21%</div>\n' +
+                    '                        <div class="item__delete">\n' +
+                    '                            <button class="item__delete--btn"><i class="ion-ios-close-outline"></i></button>\n' +
+                    '                        </div>\n' +
+                    '                    </div>\n' +
+                    '                </div>'
+            }
+
+
+            // Replace the placeholder test with some actual data
+            newHtml = html.replace('%id%', obj.id);
+            newHtml = newHtml.replace('%description%', obj.description);
+            newHtml = newHtml.replace('%value%', obj.value);
+
+
+            // Insert the HTML into the DOM
+
+
         },
         getDOMStrings: function () {
             return DOMstrings;
@@ -65,8 +129,13 @@ var controller = (function(bdgtCntrl, UICtrl){
     };
 
      var ctrlAddItem  = function(){
-         var input = UIController.getInput();
-         console.log(input);
+         var input;
+
+         //Get the field input data
+         input = UIController.getInput();
+
+         //Add the item to the budget controller
+         var newItem =budgetController.addItem(input.type, input.description, input.value);
      };
 
      return {
